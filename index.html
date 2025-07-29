@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do App</title>
+  <style>
+    :root {
+      --plum: #6F1E51;
+      --light-purple: #D980FA;
+      --red: #EA2027;
+      --teal: #12CBC4;
+      --indigo: #9980FA;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      /* min-height: 100vh; */
+    }
+
+    /* Main Input Container */
+    .input-container {
+      background-color: var(--light-purple);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .input-container h2 {
+      color: var(--plum);
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+
+    /* Input + Button in Same Box */
+    .input-box {
+      display: flex;
+      /* background-color: white; */
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      gap: 10px;
+    }
+
+    .input-box input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .input-box button {
+      background-color: var(--teal);
+      color: white;
+      border: none;
+      padding: 0 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .input-box button:hover {
+      background-color: #0fa7a0;
+    }
+
+    /* Todo List Inside Input Container */
+    .todo-container {
+      background-color: var(--indigo);
+      padding: 1.5rem;
+      border-radius: 12px;
+      color: white;
+    }
+
+    .todo-container h3 {
+      margin-bottom: 1rem;
+      text-align: center;
+      color: white;
+    }
+
+    .todo-list {
+      list-style: none;
+    }
+
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+  
+      margin-bottom: 0.8rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+    }
+
+    .todo-item label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex: 1;
+    }
+
+    .todo-item input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: var(--teal);
+    }
+
+    .todo-item button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--red);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .todo-item button:hover {
+      transform: scale(1.2);
+    }
+
+    #inpbox:focus {
+      box-shadow: 0px 0px 20px black;
+    }
+
+    .done {
+      opacity: 0.4 !important;
+      text-decoration: line-through;
+    }
+
+    @media (max-width: 500px) {
+      .input-container {
+        padding: 1.5rem;
+      }
+
+      .input-box input {
+        font-size: 0.95rem;
+      }
+
+      .input-box button {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="input-container">
+    <h2>My To-Do List</h2>
+
+    <!-- Input and Button in same row -->
+    <div class="input-box">
+      <input id="inpbox" type="text" placeholder="Enter a task..." />
+      <select name="" id="priority">
+        <option value="0">Low</option>
+        <option value="1">Medium</option>
+        <option value="2">high</option>
+      </select>
+      <button id="add-btn">Add</button>
+    </div>
+
+    <!-- Todo List under input -->
+    <div class="todo-container">
+      <h3>Tasks</h3>
+      <ul class="todo-list">
+        <!-- <li class="todo-item">
+          <label>
+            <input type="checkbox" />
+            Finish homework
+          </label>
+          <button>&times;</button>
+        </li> -->
+        <!-- <li class="todo-item">
+          <label>
+            <input type="checkbox" />
+            Grocery shopping
+          </label>
+          <button>&times;</button>
+        </li> -->
+
+      </ul>
+    </div>
+  </div>
+  <script>
+    const addBtn = document.querySelector("#add-btn");
+    const inpBox = document.querySelector("#inpbox");
+    const todocontainer = document.querySelector(".todo-container");
+    const priority = document.querySelector("#priority");
+    const theme = ['#6a89cc', '#0a3d62', '#b71541'];
+    inpBox.addEventListener(
+      "keyup",
+      function (e) {
+        if (e.key == "Entery") {
+          addToDo();
+        }
+      }
+    )
+
+    addBtn.addEventListener(
+      "click",
+      addToDo
+    )
+    function addToDo() {
+      const task = inpBox.value;
+      const pIndex = priority.value
+      if (task == "") {
+        inpBox.focus();
+        return;
+      } else {
+        // console.log(theme[pIndex]);
+        // console.log(priority.value);
+        // console.log(task);
+        inpBox.value = "";
+        const todoItem = document.createElement("div");
+        todoItem.classList.add("todo-item");
+        todoItem.addEventListener(
+          "click",
+          function () {
+            todoItem.classList.toggle("done");
+          }
+
+        )
+        todoItem.style.backgroundColor = theme[pIndex];
+        todoItem.innerHTML = ` 
+             <label>
+            <input type="checkbox"/>
+            ${task}
+             </label>
+            <button>&times;</button>
+            
+           `
+        todoItem.children[1].addEventListener(
+          "click",
+          function (e) {
+            e.stopPropagation();
+            todoItem.remove();
+          }
+        )
+        todocontainer.append(todoItem)
+
+
+      }
+
+    }
+  </script>
+</body>
+
+</html>
